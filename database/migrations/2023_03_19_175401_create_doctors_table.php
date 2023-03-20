@@ -17,7 +17,7 @@ class CreateDoctorsTable extends Migration
             $table->id();
             $table->string('department_id')->references('id')->on('departments');
             $table->string('name');
-            $table->integer('phone')->unique();
+            $table->integer('phone');
             $table->integer('fee');
             $table->timestamps();
         });

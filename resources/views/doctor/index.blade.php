@@ -4,59 +4,55 @@
 @endpush
 
 @section('content')
-@if(count($candidates) > 0)
-<table class="datatable-init-export nowrap table" data-export-title="Export">
-    <thead>
-    <tr>
-        <th>SL</th>
-        <th>User Id</th>
-        <th>Applicant Name</th>
-        <th>Position</th>
-        <th>Mobile No</th>
-        <th>Age</th>
-        <th>Pay Status</th>
-        <th>Action</th>
-    </tr>
-    </thead>
-    <tbody>
-        <?php $i = 1 ?>
-    @foreach($candidates as $candidate)
-    <tr>
-        <td>{{ $i++ }}</td>
-        <td>{{ $candidate->JobApply->identification_number }}</td>
-        <td>{{ $candidate->full_name_english }}</td>
-        <td>{{ $candidate->position_name }}</td>
-        <td>{{ $candidate->mobile_number }}</td>
-        <td>{{ json_decode($candidate->age)[2]  }} Years</td>
-        <td>{{ $candidate->JobApply->status }}</td>
-        <td class="nk-tb-col nk-tb-col-tools">
-            <ul class="nk-tb-actions gx-1">
-                <li>
-                    <div class="drodown">
-                        <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <ul class="link-list-opt no-bdr">
-                                <li><a href="#"><em class="icon ni ni-eye"></em><span>View Details</span></a></li>
-                                <li><a href="#"><em class="icon ni ni-repeat"></em><span>Transaction</span></a></li>
-                                <li><a href="#"><em class="icon ni ni-shield-star"></em><span>Reset Pass</span></a></li>
-                                <li><a href="#"><em class="icon ni ni-shield-off"></em><span>Reset Id</span></a></li>
-                                <li><a href="#"><em class="icon ni ni-na"></em><span>Suspend User</span></a></li>
-                                <li><a href="#"><em class="icon ni ni-activity-round"></em><span>Activities</span></a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-        </td>
-    </tr>
-    @endforeach
-    </tbody>
-</table>
-@else
-    <h3 class="text-center text-danger">Currently Non of Candidate is Applied</h3>
-@endif
+<div class="container">
+    <div class="row">
+        <div class="bg-light col-lg-10 offset-lg-1">
+            <div class="d-flex justify-content-between p-6 bg-dark hadline-bg mb-4">
+                <h4 class="mb-0 text-light">Doctor List </h4>
+                <a href="{{ route('doctor.create') }}" class="btn btn-info btn-sm">Create</a>
+            </div>
+            @if(count($doctors) > 0)
+
+            <table class="table">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>department</th>
+                        <th>phone</th>
+                        <th>fee</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php $i = 1 ?>
+                    @foreach($doctors as $doctor)
+                    <tr>
+                        <td>{{ $i++ }}</td>
+                        <td>{{ $doctor->name }}</td>
+                        <td>{{ $doctor->department->name }}</td>
+                        <td>{{ $doctor->phone }}</td>
+                        <td>{{ $doctor->fee }}</td>
+                        <td class="d-flex ">
+                            <a href="{{ route('doctor.edit', $doctor->id) }}" class="btn btn-primary btn-sm mr-2">Edit</a>
+                            <a href="{{ route('doctor.show', $doctor->id) }}" class="btn btn-info btn-sm mr-2">View</a>
+                            <form action="{{ route('doctor.destroy',$doctor->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+            @else
+                <h3 class="text-center text-danger">Currently Non of doctor is Available</h3>
+            @endif
+        </div>
+    </div>
+</div>
 @endsection
 
 @push('js')
-<script src="{{ asset('js/datatable-btns.js?ver=2.9.1') }}"></script>
 @endpush

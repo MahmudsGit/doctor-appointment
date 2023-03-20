@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Doctor;
 
 use App\Http\Controllers\Controller;
+use App\Models\Department;
 use App\Models\Doctor;
 use Illuminate\Http\Request;
 
@@ -15,7 +16,7 @@ class DoctorController extends Controller
      */
     public function index()
     {
-        return view('Doctor.index', [
+        return view('doctor.index', [
             'doctors' => Doctor::all()
         ]);
     }
@@ -27,7 +28,9 @@ class DoctorController extends Controller
      */
     public function create()
     {
-        return view('Doctor.create');
+        return view('doctor.create', [
+            'departments' => Department::all()
+        ]);
     }
 
     /**
@@ -39,10 +42,10 @@ class DoctorController extends Controller
     public function store(Request $request)
     {
         $this->validate($request,[
-            'department_id' =>'required',
+            'department_id' =>'required|int|exists:departments,id',
             'name' =>'required',
-            'phone' =>'required|',
-            'fee' =>'required|integer',
+            'phone' =>'required|integer|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+            'fee' =>'required|integer|min:0',
          ]);
  
          $doctor = new Doctor();
@@ -52,7 +55,7 @@ class DoctorController extends Controller
          $doctor->fee = $request->fee;
          $doctor->save();
  
-         return redirect()->route('Doctor.create')->with('alert-green', 'New Doctor Added Successfully');
+         return redirect()->route('doctor.create')->with('alert-green', 'New Doctor Added Successfully');
     }
 
     /**
@@ -63,7 +66,9 @@ class DoctorController extends Controller
      */
     public function show($id)
     {
-        //
+        return view('Doctor.show', [
+            'doctor' => Doctor::find($id)
+        ]);
     }
 
     /**
@@ -75,7 +80,8 @@ class DoctorController extends Controller
     public function edit($id)
     {
         return view('Doctor.edit', [
-            'doctor' => Doctor::find($id)
+            'doctor' => Doctor::find($id),
+            'departments' => Department::all()
         ]);
     }
 
@@ -89,12 +95,12 @@ class DoctorController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request,[
-            'department_id' =>'required',
+            'department_id' =>'required|int|exists:departments,id',
             'name' =>'required',
-            'phone' =>'required|',
-            'fee' =>'required|integer',
+            'phone' =>'required|integer|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+            'fee' =>'required|integer|min:0',
         ]);
- 
+        
         $doctor = Doctor::find($id);
         $doctor->department_id = $request->department_id;
         $doctor->name = $request->name;
@@ -102,7 +108,7 @@ class DoctorController extends Controller
         $doctor->fee = $request->fee;
         $doctor->save();
  
-        return redirect()->route('Doctor.edit')->with('alert-green', 'Doctor Info updated Successfully');
+        return redirect()->route('doctor.index')->with('alert-green', 'Doctor Info updated Successfully');
     }
 
     /**
@@ -115,6 +121,6 @@ class DoctorController extends Controller
     {
         $doctor = Doctor::find($id);
         $doctor->delete();
-        return redirect()->back()->with('alert-green', 'Doctor Delete Successfully');
+        return redirect()->route('doctor.index')->with('alert-green', 'Doctor Delete Successfully');
     }
 }

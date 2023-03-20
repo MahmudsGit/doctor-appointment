@@ -9,8 +9,8 @@
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 
         <!-- Styles -->
-        <link rel="stylesheet" href='css/bootstrap.min.css'>
-        <link rel="stylesheet" href='css/main.css'>
+        <link rel="stylesheet" href='{{ asset('css/bootstrap.min.css') }}'>
+        <link rel="stylesheet" href='{{ asset('css/main.css') }}'>
         
         <!-- Custom Page css -->
         @stack('css')
@@ -25,7 +25,7 @@
         <!-- footer -->
         @include('partials.footer')
         
-        <script src="'js/bootstrap.min.js'"></script>
+        <script src="'{{ asset('js/bootstrap.min.js') }}'"></script>
 
         <!-- custom page js -->
         @stack('js')
