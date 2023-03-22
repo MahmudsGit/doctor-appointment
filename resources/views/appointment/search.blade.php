@@ -58,7 +58,7 @@
                     </table>
                     {{ $appointments->links() }}
                     @else
-                        <h3 class="text-center text-danger">Currently Non of appointment is Available</h3>
+                        <h3 class="text-center text-danger">Nothing Found !</h3>
                     @endif
                 </div>
                 <p class="text-end text-secondary mt-3">Submited By Md Golam Mahmud</p>

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Department;
 use App\Models\Doctor;
 use Illuminate\Http\Request;
+use Brian2694\Toastr\Facades\Toastr;
 
 class DoctorController extends Controller
 {
@@ -17,7 +18,7 @@ class DoctorController extends Controller
     public function index()
     {
         return view('doctor.index', [
-            'doctors' => Doctor::all()
+            'doctors' => Doctor::orderBy('created_at', 'desc')->get()
         ]);
     }
 
@@ -55,7 +56,8 @@ class DoctorController extends Controller
         $doctor->fee = $request->fee;
         $doctor->save();
 
-        return redirect()->route('doctor.create')->with('alert-green', 'New Doctor Added Successfully');
+        Toastr::success('Doctor Added Successfully','Success');
+        return redirect()->route('doctor.create');
     }
 
     /**
@@ -108,7 +110,8 @@ class DoctorController extends Controller
         $doctor->fee = $request->fee;
         $doctor->save();
  
-        return redirect()->route('doctor.index')->with('alert-green', 'Doctor Info updated Successfully');
+        Toastr::success('Doctor Info updated Successfully','Success');
+        return redirect()->route('doctor.index');
     }
 
     /**
@@ -121,6 +124,9 @@ class DoctorController extends Controller
     {
         $doctor = Doctor::find($id);
         $doctor->delete();
+
+        
+        Toastr::success('Doctor Remove Successfully','Success');
         return redirect()->route('doctor.index')->with('alert-green', 'Doctor Delete Successfully');
     }
 }

@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Appointment;
 use App\Models\Department;
 use App\Models\Doctor;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Brian2694\Toastr\Facades\Toastr;
+use Illuminate\Support\Str;
 
 class AppointmentController extends Controller
 {
@@ -21,6 +23,45 @@ class AppointmentController extends Controller
     {
         return view('appointment.index', [
             'appointments' => Appointment::orderBy('created_at', 'desc')->paginate('10')
+        ]);
+    }
+
+    public function search(Request $request)
+    {
+        $this->validate($request,[
+            'search' =>'required',
+            'category' =>'required',
+        ]);
+
+        if($request->category == 'appointment_date'){
+            $appointments = Appointment::where('appointment_date', 'LIKE', "%$request->search%")->paginate('10');
+        }
+
+        if($request->category == 'doctor_id'){
+
+            $doctor = Doctor::where('name', $request->search)->get();
+
+            foreach($doctor as $info){
+                $doctor_id = $info->id;
+            }
+
+            $appointments = Appointment::where('doctor_id', 'LIKE', "%$doctor_id%")->paginate('10');
+        }
+
+        if($request->category == 'patient_name'){
+            $appointments = Appointment::where('patient_name', 'LIKE', "%$request->search%")->paginate('10');
+        }
+
+        if($request->category == 'patient_phone'){
+            $appointments = Appointment::where('patient_phone', 'LIKE', "%$request->search%")->paginate('10');
+        }
+
+        if($request->category == 'appointment_no'){
+            $appointments = Appointment::where('appointment_no', 'LIKE', "%$request->search%")->paginate('10');
+        }
+
+        return view('appointment.search', [
+            'appointments' => $appointments
         ]);
     }
 
@@ -62,7 +103,7 @@ class AppointmentController extends Controller
 
         if(session()->has('allAppointment') && count(Session::get('allAppointment')) > 0){
             $allAppointment = Session::get('allAppointment');
-            
+
             for($i = 0 ; $i <= count($allAppointment); $i++){
                 if($allAppointment[$i]['doctor_id'] == $appointment['doctor_id'] && $allAppointment[$i]['appointment_date'] == $appointment['appointment_date']){
                 
@@ -77,7 +118,19 @@ class AppointmentController extends Controller
             $allAppointment[0] = $appointment;
             $request->session()->put('allAppointment', $allAppointment);
         }
-        
+
+
+        // $total_fee = array_sum($allAppointment['fee']);
+        // $total_fees = [];
+        // foreach($allAppointment as $index=>$item){
+        //     // $total_fee = array_sum($item['fee']);
+        //     $total_fee = $index['fee'];
+        // }
+        // dd($total_fee);
+
+        // $request->session()->put('total_fee', $total_fee);
+
+        Toastr::success('Appointment Listed Success','Success');
         return redirect()->route('appointment.create');
     }
 
@@ -99,6 +152,7 @@ class AppointmentController extends Controller
 
         session()->put("allAppointment", $apptSession);
 
+        Toastr::success('Appointment Listed Item Remove Success','Success');
         return redirect()->route('appointment.create');            
     }
 
@@ -120,6 +174,8 @@ class AppointmentController extends Controller
             $total_fee = session()->get('allAppointment')[$i]['fee'];
         }
 
+        $current_Date = Carbon::now()->format('d_m_Y');
+
         for($i = 0 ; $i < count(session()->get('allAppointment')) ; $i++){
             $appointment = new Appointment();
             $appointment->appointment_date = session()->get('allAppointment')[$i]['appointment_date'];
@@ -128,12 +184,13 @@ class AppointmentController extends Controller
             $appointment->patient_phone = $request->patient_phone;
             $appointment->total_fee = 123;
             $appointment->paid_amount = $request->paid_amount;
-            $appointment->appointment_no = 123;
+            $appointment->appointment_no = 1212;
             $appointment->save();
         }
 
         Session::flush();
         
+        Toastr::success('Appointment Success','Success');
         return redirect()->route('appointment.index')->with('alert-green', 'Appointment Successfull');
     }
 

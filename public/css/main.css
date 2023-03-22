@@ -27,3 +27,24 @@ body {
 .appointment-form{
     width: 100%;
 }
+
+.form-control:focus, select:focus {
+    border-color: #FFFFFF;
+    box-shadow: inset 0 -1px 0 #ffffff;
+    outline: none;
+    border: 0;
+}
+
+.pagination{
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.page-link{
+    color: #000000 !important;
+}
+ .active .page-link{
+    background-color: #1a202c !important;
+    color: #ffffff !important;
+}

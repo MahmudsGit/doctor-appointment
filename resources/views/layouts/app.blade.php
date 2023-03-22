@@ -11,6 +11,8 @@
         <!-- Styles -->
         <link rel="stylesheet" href='{{ asset('css/bootstrap.min.css') }}'>
         <link rel="stylesheet" href='{{ asset('css/main.css') }}'>
+        <!-- Toastr CSS -->
+        <link rel="stylesheet" href="{{ asset('css/toastr.min.css') }}">
         
         <!-- Custom Page css -->
         @stack('css')
@@ -28,6 +30,20 @@
         <script src="http://code.jquery.com/jquery-3.4.1.js"></script>
         <script src="{{ asset('js/bootstrap.min.js') }}"></script>
 
+        
+        <!-- TOASTR JS -->
+        <script src="{{ asset('js/toastr.min.js') }}"></script>
+        {!! Toastr::message() !!}
+        <script>
+            @if($errors->any())
+            @foreach($errors->all() as $error)
+            toastr.error('{{ $error }}','Error ! ',{
+                closeButton:true,
+                progressBar:true,
+            });
+            @endforeach
+            @endif
+        </script>
         <!-- custom page js -->
         @stack('js')
     </body>

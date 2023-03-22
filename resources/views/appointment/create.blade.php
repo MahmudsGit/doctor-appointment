@@ -107,7 +107,7 @@
                                         <p for="payment" class="form-label text-dark">Payment</p>
                                         <div class="d-flex justify-content-between gap-4">
                                             <div class="mb-3">
-                                                <input type="text" name="total_fee" class="form-control" id="total_fee" placeholder="Total Fee" disabled>
+                                                <input type="text" name="total_fee" class="form-control" id="total_fee" placeholder="Total Fee" value="{{ session()->get('total_fee')+2 }}" readonly>
                                             </div>
                                             <div class="mb-3">
                                                 <input type="text" name="paid_amount" class="form-control" id="paid_amount" placeholder="Patient Amount">
