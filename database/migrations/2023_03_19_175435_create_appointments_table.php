@@ -19,7 +19,7 @@ class CreateAppointmentsTable extends Migration
             $table->string('appointment_date');
             $table->string('doctor_id')->references('id')->on('doctors');
             $table->string('patient_name');
-            $table->integer('patient_phone')->unique();
+            $table->integer('patient_phone');
             $table->integer('total_fee');
             $table->integer('paid_amount');
             $table->timestamps();

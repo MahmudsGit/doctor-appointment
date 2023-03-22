@@ -8,54 +8,47 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-10 offset-lg-1">
-              <h3 class="mb-3">Applintment List</h3>
-                <div class="bg-white shadow rounded">
-                    <div class="row">
-                        <div class="col-md-7 pe-0">
-                            <div class="form-left h-100 py-5 px-5">
-                                <form action="" class="row g-4">
-                                        <div class="col-12">
-                                            <label>Username<span class="text-danger">*</span></label>
-                                            <div class="input-group">
-                                                <div class="input-group-text"><i class="bi bi-person-fill"></i></div>
-                                                <input type="text" class="form-control" placeholder="Enter Username">
-                                            </div>
-                                        </div>
-
-                                        <div class="col-12">
-                                            <label>Password<span class="text-danger">*</span></label>
-                                            <div class="input-group">
-                                                <div class="input-group-text"><i class="bi bi-lock-fill"></i></div>
-                                                <input type="text" class="form-control" placeholder="Enter Password">
-                                            </div>
-                                        </div>
-
-                                        <div class="col-sm-6">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="inlineFormCheck">
-                                                <label class="form-check-label" for="inlineFormCheck">Remember me</label>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-sm-6">
-                                            <a href="#" class="float-end text-primary">Forgot Password?</a>
-                                        </div>
-
-                                        <div class="col-12">
-                                            <button type="submit" class="btn btn-primary px-4 float-end mt-4">login</button>
-                                        </div>
-                                </form>
-                            </div>
-                        </div>
-                        <div class="col-md-5 ps-0 d-none d-md-block">
-                            <div class="form-right h-100 bg-primary text-white text-center pt-5">
-                                <i class="bi bi-bootstrap"></i>
-                                <h2 class="fs-1">Welcome Back!!!</h2>
-                            </div>
-                        </div>
-                    </div>
+                <div class="d-flex justify-content-between p-6 bg-dark hadline-bg mb-4">
+                    <h4 class="mb-0 text-light">Appointment List </h4>
+                    <a href="{{ route('appointment.create') }}" class="btn btn-info">Get Apponment</a>
                 </div>
-                <p class="text-end text-secondary mt-3">Bootstrap 5 Login Page Design</p>
+                <div class="bg-white shadow rounded">
+                    @if(count($appointments) > 0)
+
+                    <table class="table">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Appointment Date</th>
+                                <th>Doctor</th>
+                                <th>Patient Name</th>
+                                <th>Patient Phone</th>
+                                <th>Total Fee</th>
+                                <th>Paid Amount</th>
+                                <th>Appointment No</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php $i = 1 ?>
+                            @foreach($appointments as $appointment)
+                            <tr>
+                                <td>{{ $i++ }}</td>
+                                <td>{{ $appointment->appointment_date }}</td>
+                                <td>{{ $appointment->doctor->name }}</td>
+                                <td>{{ $appointment->patient_name }}</td>
+                                <td>{{ $appointment->patient_phone }}</td>
+                                <td>{{ $appointment->total_fee }}</td>
+                                <td>{{ $appointment->paid_amount }}</td>
+                                <td>{{ $appointment->appointment_no }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    @else
+                        <h3 class="text-center text-danger">Currently Non of appointment is Available</h3>
+                    @endif
+                </div>
+                <p class="text-end text-secondary mt-3">Submited By Md Golam Mahmud</p>
             </div>
         </div>
     </div>

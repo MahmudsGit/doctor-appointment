@@ -42,20 +42,20 @@ class DoctorController extends Controller
     public function store(Request $request)
     {
         $this->validate($request,[
-            'department_id' =>'required|int|exists:departments,id',
+            'department_id' =>'required|integer',
             'name' =>'required',
-            'phone' =>'required|integer|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
-            'fee' =>'required|integer|min:0',
-         ]);
- 
-         $doctor = new Doctor();
-         $doctor->department_id = $request->department_id;
-         $doctor->name = $request->name;
-         $doctor->phone = $request->phone;
-         $doctor->fee = $request->fee;
-         $doctor->save();
- 
-         return redirect()->route('doctor.create')->with('alert-green', 'New Doctor Added Successfully');
+            'phone' =>'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+            'fee' =>'required|integer|min:0'
+        ]);
+
+        $doctor = new Doctor();
+        $doctor->department_id = $request->department_id;
+        $doctor->name = $request->name;
+        $doctor->phone = $request->phone;
+        $doctor->fee = $request->fee;
+        $doctor->save();
+
+        return redirect()->route('doctor.create')->with('alert-green', 'New Doctor Added Successfully');
     }
 
     /**
@@ -79,7 +79,7 @@ class DoctorController extends Controller
      */
     public function edit($id)
     {
-        return view('Doctor.edit', [
+        return view('doctor.edit', [
             'doctor' => Doctor::find($id),
             'departments' => Department::all()
         ]);
@@ -95,10 +95,10 @@ class DoctorController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request,[
-            'department_id' =>'required|int|exists:departments,id',
+            'department_id' =>'required|integer',
             'name' =>'required',
-            'phone' =>'required|integer|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
-            'fee' =>'required|integer|min:0',
+            'phone' =>'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+            'fee' =>'required|integer|min:0'
         ]);
         
         $doctor = Doctor::find($id);

@@ -17,7 +17,7 @@
                       <a class="nav-link text-secondary" href="{{ route('doctor.index') }}">Doctor</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link text-secondary" href="#">Appointment</a>
+                      <a class="nav-link text-secondary" href="{{ route('appointment.create') }}">Appointment</a>
                     </li>
                   </ul>
                 </div>

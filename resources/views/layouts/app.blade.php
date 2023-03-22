@@ -25,7 +25,8 @@
         <!-- footer -->
         @include('partials.footer')
         
-        <script src="'{{ asset('js/bootstrap.min.js') }}'"></script>
+        <script src="http://code.jquery.com/jquery-3.4.1.js"></script>
+        <script src="{{ asset('js/bootstrap.min.js') }}"></script>
 
         <!-- custom page js -->
         @stack('js')

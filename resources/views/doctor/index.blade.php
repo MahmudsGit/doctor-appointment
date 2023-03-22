@@ -6,7 +6,7 @@
 @section('content')
 <div class="container">
     <div class="row">
-        <div class="bg-light col-lg-10 offset-lg-1">
+        <div class="bg-light col-lg-10 offset-lg-1 pb-4">
             <div class="d-flex justify-content-between p-6 bg-dark hadline-bg mb-4">
                 <h4 class="mb-0 text-light">Doctor List </h4>
                 <a href="{{ route('doctor.create') }}" class="btn btn-info btn-sm">Create</a>
