@@ -107,7 +107,7 @@
                                         <p for="payment" class="form-label text-dark">Payment</p>
                                         <div class="d-flex justify-content-between gap-4">
                                             <div class="mb-3">
-                                                <input type="text" name="total_fee" class="form-control" id="total_fee" placeholder="Total Fee" value="{{ session()->get('total_fee')+2 }}" readonly>
+                                                <input type="text" name="total_fee" class="form-control" id="total_fee" placeholder="Total Fee" value="{{ session()->get('total_fee') }}" readonly>
                                             </div>
                                             <div class="mb-3">
                                                 <input type="text" name="paid_amount" class="form-control" id="paid_amount" placeholder="Patient Amount">
@@ -171,14 +171,15 @@
             let id = $(this).val();
             let date = $('#appointment_date').val();
             $('#availabletext').empty();
-            $('#availabletext').append(' ');
+            $('#availabletext').append('Cheaking Availability ...');
             $.ajax({
                 type: 'GET',
                 url: 'doctoravailable/' + id + '/' + date,
                 success: function (response) {
                     var response = JSON.parse(response);
                     console.log(response);
-                    if(response <= 2){
+                    $('#availabletext').empty();
+                    if(response < 2){
                         $('#available').val('yes');
                         $('#availabletext').append('Available');
                     }else{

@@ -127,6 +127,6 @@ class DoctorController extends Controller
 
         
         Toastr::success('Doctor Remove Successfully','Success');
-        return redirect()->route('doctor.index')->with('alert-green', 'Doctor Delete Successfully');
+        return redirect()->route('doctor.index');
     }
 }

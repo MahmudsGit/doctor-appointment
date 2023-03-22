@@ -21,6 +21,6 @@ class GetDoctorController extends Controller
     
     public function doctorAvailable($id, $date)
     {
-        echo json_encode( count(Appointment::where('doctor_id', $id)->get()) );
+        echo json_encode( count(Appointment::where('doctor_id', $id)->where('appointment_date', '=', $date)->get()) );
     }
 }

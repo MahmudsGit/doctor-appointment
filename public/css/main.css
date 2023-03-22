@@ -48,3 +48,12 @@ body {
     background-color: #1a202c !important;
     color: #ffffff !important;
 }
+
+.number-icon{
+    height: 100%; 
+}
+
+.number-icon-text{
+    padding: 15px;
+    height: 50%; 
+}

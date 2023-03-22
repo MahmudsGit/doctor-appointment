@@ -24,39 +24,38 @@
                     </form>
                     <a href="{{ route('appointment.create') }}" class="btn btn-info">Get Apponment</a>
                 </div>
-                <div class="bg-white shadow rounded">
-                    @if(count($appointments) > 0)
+                <div class="bg-white shadow rounded p-4">
 
-                    <table class="table">
-                        <thead class="table-light">
-                            <tr>
-                                <th>#</th>
-                                <th>Appointment Date</th>
-                                <th>Doctor</th>
-                                <th>Patient Name</th>
-                                <th>Patient Phone</th>
-                                <th>Total Fee</th>
-                                <th>Paid Amount</th>
-                                <th>Appointment No</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php $i = 1 ?>
-                            @foreach($appointments as $appointment)
-                            <tr>
-                                <td>{{ $i++ }}</td>
-                                <td>{{ $appointment->appointment_date }}</td>
-                                <td>{{ $appointment->doctor->name }}</td>
-                                <td>{{ $appointment->patient_name }}</td>
-                                <td>{{ $appointment->patient_phone }}</td>
-                                <td>{{ $appointment->total_fee }}</td>
-                                <td>{{ $appointment->paid_amount }}</td>
-                                <td>{{ $appointment->appointment_no }}</td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                    @if(count($appointments) > 0)
+                    
+                    <?php $i = 1 ?>
+                    @foreach($appointments as $appointment)
+                    <div class="card mb-3" style="width: 100%;">
+                        <div class="row g-0">
+                          <div class="col-md-2 ">
+                            <div class="d-flex justify-content-center align-self-center bg-dark number-icon rounded-start" >
+                                <p class="bg-info rounded-bottom number-icon-text">{{ $i++ }}</p>
+                            </div>
+                          </div>
+                          <div class="col-md-10">
+                            <div class="card-body">
+                              <h5 class="card-title">Appointment Information</h5>
+                              <p class="fs-6 m-0 p-0"><span class="text-bold">Appointment No: </span> {{ $appointment->appointment_no }}</p>
+                              <p class="fs-6 m-0 p-0"><span class="text-bold">Appointment Date: </span> 
+                                <small class="text-muted">{{ $appointment->appointment_date }}</small>
+                              </p>
+                              <p class="fs-6 m-0 p-0"><span class="text-bold">Doctor Name: </span> {{ $appointment->doctor->name }}</p>
+                              <p class="fs-6 m-0 p-0"><span class="text-bold">Patient Name: </span> {{ $appointment->patient_name }}</p>
+                              <p class="fs-6 m-0 p-0"><span class="text-bold">Patient Phone: </span> {{ $appointment->patient_phone }}</p>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+
+                    @endforeach
+                    
                     {{ $appointments->links() }}
+
                     @else
                         <h3 class="text-center text-danger">Currently Non of appointment is Available</h3>
                     @endif

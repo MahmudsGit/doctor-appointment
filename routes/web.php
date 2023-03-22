@@ -16,7 +16,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [\App\Http\Controllers\Appointment\AppointmentController::class, 'index']);
 Route::resource('doctor', \App\Http\Controllers\Doctor\DoctorController::class);
 
-Route::resource('appointment', \App\Http\Controllers\Appointment\AppointmentController::class );
+Route::get('appointment/', [\App\Http\Controllers\Appointment\AppointmentController::class, 'index'])->name('appointment.index');
+Route::get('appointment/create', [\App\Http\Controllers\Appointment\AppointmentController::class, 'create'])->name('appointment.create');
+Route::post('appointment', [\App\Http\Controllers\Appointment\AppointmentController::class, 'store'])->name('appointment.store');
 Route::post('appointment/add', [\App\Http\Controllers\Appointment\AppointmentController::class, 'addAppointment'])->name('appointment.addAppointment');
 Route::get('appointment/remove/{id}', [\App\Http\Controllers\Appointment\AppointmentController::class, 'removeAppointment'])->name('appointment.removeAppointment');
 Route::post('appointment/search', [\App\Http\Controllers\Appointment\AppointmentController::class, 'search'])->name('appointment.search');

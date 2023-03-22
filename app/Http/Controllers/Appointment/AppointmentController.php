@@ -22,7 +22,7 @@ class AppointmentController extends Controller
     public function index()
     {
         return view('appointment.index', [
-            'appointments' => Appointment::orderBy('created_at', 'desc')->paginate('10')
+            'appointments' => Appointment::orderBy('created_at', 'desc')->paginate('5')
         ]);
     }
 
@@ -34,7 +34,7 @@ class AppointmentController extends Controller
         ]);
 
         if($request->category == 'appointment_date'){
-            $appointments = Appointment::where('appointment_date', 'LIKE', "%$request->search%")->paginate('10');
+            $appointments = Appointment::where('appointment_date', 'LIKE', "%$request->search%")->paginate('5');
         }
 
         if($request->category == 'doctor_id'){
@@ -45,19 +45,19 @@ class AppointmentController extends Controller
                 $doctor_id = $info->id;
             }
 
-            $appointments = Appointment::where('doctor_id', 'LIKE', "%$doctor_id%")->paginate('10');
+            $appointments = Appointment::where('doctor_id', 'LIKE', "%$doctor_id%")->paginate('5');
         }
 
         if($request->category == 'patient_name'){
-            $appointments = Appointment::where('patient_name', 'LIKE', "%$request->search%")->paginate('10');
+            $appointments = Appointment::where('patient_name', 'LIKE', "%$request->search%")->paginate('5');
         }
 
         if($request->category == 'patient_phone'){
-            $appointments = Appointment::where('patient_phone', 'LIKE', "%$request->search%")->paginate('10');
+            $appointments = Appointment::where('patient_phone', 'LIKE', "%$request->search%")->paginate('5');
         }
 
         if($request->category == 'appointment_no'){
-            $appointments = Appointment::where('appointment_no', 'LIKE', "%$request->search%")->paginate('10');
+            $appointments = Appointment::where('appointment_no', 'LIKE', "%$request->search%")->paginate('5');
         }
 
         return view('appointment.search', [
@@ -72,8 +72,6 @@ class AppointmentController extends Controller
      */
     public function create()
     {        
-        // Session::flush();
-
         return view('appointment.create', [
             'appointments' => Appointment::all(),
             'departments' => Department::all(),
@@ -104,31 +102,26 @@ class AppointmentController extends Controller
         if(session()->has('allAppointment') && count(Session::get('allAppointment')) > 0){
             $allAppointment = Session::get('allAppointment');
 
-            for($i = 0 ; $i <= count($allAppointment); $i++){
-                if($allAppointment[$i]['doctor_id'] == $appointment['doctor_id'] && $allAppointment[$i]['appointment_date'] == $appointment['appointment_date']){
-                
+            if (Appointment::where('appointment_date', '=', $request->appointment_date)->count() > 2) {
+
+                    Toastr::success('Doctor Is Not Available !','Warning');
                     return redirect()->route('appointment.create');
-                }else{
+             }else{
                     array_push($allAppointment, $appointment);
                     $request->session()->put('allAppointment', $allAppointment);
-                }
             }
-
         }else{
             $allAppointment[0] = $appointment;
             $request->session()->put('allAppointment', $allAppointment);
         }
 
+        $total_fees = [];
+        foreach(Session::get('allAppointment') as $index => $appt){
+            array_push($total_fees, $appt['fee']);
+        }
 
-        // $total_fee = array_sum($allAppointment['fee']);
-        // $total_fees = [];
-        // foreach($allAppointment as $index=>$item){
-        //     // $total_fee = array_sum($item['fee']);
-        //     $total_fee = $index['fee'];
-        // }
-        // dd($total_fee);
-
-        // $request->session()->put('total_fee', $total_fee);
+        $total_fee = array_sum($total_fees);
+        $request->session()->put('total_fee', $total_fee);
 
         Toastr::success('Appointment Listed Success','Success');
         return redirect()->route('appointment.create');
@@ -152,6 +145,14 @@ class AppointmentController extends Controller
 
         session()->put("allAppointment", $apptSession);
 
+        $total_fees = [];
+        foreach(Session::get('allAppointment') as $index => $appt){
+            array_push($total_fees, $appt['fee']);
+        }
+
+        $total_fee = array_sum($total_fees);
+        session()->put('total_fee', $total_fee);
+
         Toastr::success('Appointment Listed Item Remove Success','Success');
         return redirect()->route('appointment.create');            
     }
@@ -170,93 +171,31 @@ class AppointmentController extends Controller
             'paid_amount' =>'required|integer|min:0'
         ]);
         
-        for($i = 0 ; $i < count(session()->get('allAppointment')) ; $i++){
-            $total_fee = session()->get('allAppointment')[$i]['fee'];
+        $current_Date = Carbon::now()->format('d_m_Y_H_i_s');
+
+        if(session()->get('total_fee') == $request->paid_amount){
+
+            foreach(session()->get('allAppointment') as $index => $appt){
+                $appointment = new Appointment();
+                $appointment->appointment_date = $appt['appointment_date'];
+                $appointment->doctor_id = $appt['doctor_id'];
+                $appointment->patient_name = $request->patient_name;
+                $appointment->patient_phone = $request->patient_phone;
+                $appointment->total_fee = session()->get('total_fee');
+                $appointment->paid_amount = $request->paid_amount;
+                $appointment->appointment_no = $current_Date.$appointment->id.'_'.Str::random(2);
+                $appointment->save();
+            }
+
+            Session::flush();
+            
+            Toastr::success('Appointment Success','Success');
+            return redirect()->route('appointment.index');
+        }else{
+
+            Toastr::success('Total Amount Miss Match','Warning');
+            return redirect()->route('appointment.index');
         }
-
-        $current_Date = Carbon::now()->format('d_m_Y');
-
-        for($i = 0 ; $i < count(session()->get('allAppointment')) ; $i++){
-            $appointment = new Appointment();
-            $appointment->appointment_date = session()->get('allAppointment')[$i]['appointment_date'];
-            $appointment->doctor_id = session()->get('allAppointment')[$i]['doctor_id'];
-            $appointment->patient_name = $request->patient_name;
-            $appointment->patient_phone = $request->patient_phone;
-            $appointment->total_fee = 123;
-            $appointment->paid_amount = $request->paid_amount;
-            $appointment->appointment_no = 1212;
-            $appointment->save();
-        }
-
-        Session::flush();
         
-        Toastr::success('Appointment Success','Success');
-        return redirect()->route('appointment.index')->with('alert-green', 'Appointment Successfull');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        $this->validate($request,[
-            'appointment_date' =>'required',
-            'doctor_id' =>'required|integer',
-            'patient_name' =>'required',
-            'patient_phone' =>'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
-            'total_fee' =>'required|integer|min:0',
-            'paid_amount' =>'required|integer|min:0'
-        ]);
-        
-        $appointment = Appointment::find($id);
-        $appointment->appointment_date = $request->appointment_date;
-        $appointment->doctor_id = $request->doctor_id;
-        $appointment->patient_name = $request->patient_name;
-        $appointment->patient_phone = $request->patient_phone;
-        $appointment->total_fee = $request->total_fee;
-        $appointment->paid_amount = $request->paid_amount;
-        $appointment->appointment_no = $request->appointment_no;
-        $appointment->save();
- 
-        return redirect()->route('appointment.index')->with('alert-green', 'Doctor Info updated Successfully');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        $appointment = Appointment::find($id);
-        $appointment->delete();
-        return redirect()->route('appointment.index')->with('alert-green', 'Appointment Delete Successfully');
     }
 }
