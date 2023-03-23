@@ -14,6 +14,14 @@ body {
     width: 100%;
 }
 
+.bg-left{
+    background: #EFEFEF;
+}
+
+.bg-right{
+    background: #6C757D;
+}
+
 .hadline-bg{
     border-radius: 0px 0px 40px 40px;
     width: 100%;
@@ -55,5 +63,15 @@ body {
 
 .number-icon-text{
     padding: 15px;
-    height: 50%; 
+    height: 30%; 
+}
+
+@media only screen and (max-width: 750px) {
+    .hadline-bg{
+        flex-direction: column;
+        gap: 15px;
+    }
+    .number-icon-text{
+        height: 70%; 
+    }
 }

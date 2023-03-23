@@ -11,6 +11,10 @@
         <!-- Styles -->
         <link rel="stylesheet" href='{{ asset('css/bootstrap.min.css') }}'>
         <link rel="stylesheet" href='{{ asset('css/main.css') }}'>
+
+        <!-- Fontawesome CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        
         <!-- Toastr CSS -->
         <link rel="stylesheet" href="{{ asset('css/toastr.min.css') }}">
         
@@ -27,11 +31,13 @@
         <!-- footer -->
         @include('partials.footer')
         
+        <!-- JQuery -->
         <script src="http://code.jquery.com/jquery-3.4.1.js"></script>
-        <script src="{{ asset('js/bootstrap.min.js') }}"></script>
 
+        <!-- Bootstrap js -->
+        <script src="{{ asset('js/bootstrap.min.js') }}"></script>
         
-        <!-- TOASTR JS -->
+        <!-- Toastr js -->
         <script src="{{ asset('js/toastr.min.js') }}"></script>
         {!! Toastr::message() !!}
         <script>

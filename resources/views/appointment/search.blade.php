@@ -14,7 +14,7 @@
                         @csrf
                         <select name="category" class="select rounded border-0" data-mdb-filter="true">
                             <option value="appointment_date">Appointment Date</option>
-                            <option value="doctor_id">Doctor</option>
+                            <option value="doctor_id">Doctor Name</option>
                             <option value="patient_name">Patient Name</option>
                             <option value="patient_phone">Patient Phone</option>
                             <option value="appointment_no">Appointment No</option>

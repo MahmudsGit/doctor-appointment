@@ -57,6 +57,7 @@ class DoctorController extends Controller
         $doctor->save();
 
         Toastr::success('Doctor Added Successfully','Success');
+
         return redirect()->route('doctor.create');
     }
 
@@ -111,6 +112,7 @@ class DoctorController extends Controller
         $doctor->save();
  
         Toastr::success('Doctor Info updated Successfully','Success');
+
         return redirect()->route('doctor.index');
     }
 
@@ -127,6 +129,7 @@ class DoctorController extends Controller
 
         
         Toastr::success('Doctor Remove Successfully','Success');
+        
         return redirect()->route('doctor.index');
     }
 }

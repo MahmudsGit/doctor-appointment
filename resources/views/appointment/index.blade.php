@@ -14,7 +14,7 @@
                         @csrf
                         <select name="category" class="select rounded border-0" data-mdb-filter="true">
                             <option value="appointment_date">Appointment Date</option>
-                            <option value="doctor_id">Doctor</option>
+                            <option value="doctor_id">Doctor Name</option>
                             <option value="patient_name">Patient Name</option>
                             <option value="patient_phone">Patient Phone</option>
                             <option value="appointment_no">Appointment No</option>
@@ -40,13 +40,13 @@
                           <div class="col-md-10">
                             <div class="card-body">
                               <h5 class="card-title">Appointment Information</h5>
-                              <p class="fs-6 m-0 p-0"><span class="text-bold">Appointment No: </span> {{ $appointment->appointment_no }}</p>
-                              <p class="fs-6 m-0 p-0"><span class="text-bold">Appointment Date: </span> 
+                              <p class="fs-6 m-0 p-0"><span class="fw-bold">Appointment No: </span> {{ $appointment->appointment_no }}</p>
+                              <p class="fs-6 m-0 p-0"><span class="fw-bold">Patient Name: </span> {{ $appointment->patient_name }}</p>
+                              <p class="fs-6 m-0 p-0"><span class="fw-bold">Patient Phone: </span> {{ $appointment->patient_phone }}</p>
+                              <p class="fs-6 m-0 p-0"><span class="fw-bold">Doctor Name: </span> {{ $appointment->doctor->name }}</p>
+                              <p class="fs-6 m-0 p-0"><span class="fw-bold">Appointment Date: </span> 
                                 <small class="text-muted">{{ $appointment->appointment_date }}</small>
                               </p>
-                              <p class="fs-6 m-0 p-0"><span class="text-bold">Doctor Name: </span> {{ $appointment->doctor->name }}</p>
-                              <p class="fs-6 m-0 p-0"><span class="text-bold">Patient Name: </span> {{ $appointment->patient_name }}</p>
-                              <p class="fs-6 m-0 p-0"><span class="text-bold">Patient Phone: </span> {{ $appointment->patient_phone }}</p>
                             </div>
                           </div>
                         </div>

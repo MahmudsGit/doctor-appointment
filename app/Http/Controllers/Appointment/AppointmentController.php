@@ -20,7 +20,7 @@ class AppointmentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
+    {   
         return view('appointment.index', [
             'appointments' => Appointment::orderBy('created_at', 'desc')->paginate('5')
         ]);
@@ -40,12 +40,21 @@ class AppointmentController extends Controller
         if($request->category == 'doctor_id'){
 
             $doctor = Doctor::where('name', $request->search)->get();
-
+            
             foreach($doctor as $info){
                 $doctor_id = $info->id;
             }
 
-            $appointments = Appointment::where('doctor_id', 'LIKE', "%$doctor_id%")->paginate('5');
+            if(!empty($doctor_id)){
+                
+                $appointments = Appointment::where('doctor_id', 'LIKE', "%$doctor_id%")->paginate('5');
+            }else{
+                
+                Toastr::success('Appointment Search For '.$request->search.' Invalid','Warning');
+
+                return redirect()->route('appointment.index');
+            }
+
         }
 
         if($request->category == 'patient_name'){
@@ -59,6 +68,8 @@ class AppointmentController extends Controller
         if($request->category == 'appointment_no'){
             $appointments = Appointment::where('appointment_no', 'LIKE', "%$request->search%")->paginate('5');
         }
+
+        Toastr::success('Appointment Search For '.$request->search,'Success');
 
         return view('appointment.search', [
             'appointments' => $appointments
@@ -124,6 +135,7 @@ class AppointmentController extends Controller
         $request->session()->put('total_fee', $total_fee);
 
         Toastr::success('Appointment Listed Success','Success');
+
         return redirect()->route('appointment.create');
     }
 
@@ -154,6 +166,7 @@ class AppointmentController extends Controller
         session()->put('total_fee', $total_fee);
 
         Toastr::success('Appointment Listed Item Remove Success','Success');
+
         return redirect()->route('appointment.create');            
     }
 
@@ -171,11 +184,13 @@ class AppointmentController extends Controller
             'paid_amount' =>'required|integer|min:0'
         ]);
         
-        $current_Date = Carbon::now()->format('d_m_Y_H_i_s');
-
+        $current_Date = Carbon::now()->format('d-m-Y-H-i-s');
         if(session()->get('total_fee') == $request->paid_amount){
 
             foreach(session()->get('allAppointment') as $index => $appt){
+                $latest = Appointment::latest()->first();
+                $new_id = $latest->id+1;
+
                 $appointment = new Appointment();
                 $appointment->appointment_date = $appt['appointment_date'];
                 $appointment->doctor_id = $appt['doctor_id'];
@@ -183,17 +198,19 @@ class AppointmentController extends Controller
                 $appointment->patient_phone = $request->patient_phone;
                 $appointment->total_fee = session()->get('total_fee');
                 $appointment->paid_amount = $request->paid_amount;
-                $appointment->appointment_no = $current_Date.$appointment->id.'_'.Str::random(2);
+                $appointment->appointment_no = Str::random(2).'-'.$new_id.'-'.$current_Date;
                 $appointment->save();
             }
 
             Session::flush();
             
             Toastr::success('Appointment Success','Success');
+
             return redirect()->route('appointment.index');
         }else{
 
             Toastr::success('Total Amount Miss Match','Warning');
+
             return redirect()->route('appointment.index');
         }
         
