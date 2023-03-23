@@ -188,8 +188,14 @@ class AppointmentController extends Controller
         if(session()->get('total_fee') == $request->paid_amount){
 
             foreach(session()->get('allAppointment') as $index => $appt){
+
                 $latest = Appointment::latest()->first();
-                $new_id = $latest->id+1;
+
+                if($latest == null){
+                    $new_id = 0;
+                }else{
+                    $new_id = $latest->id+1;
+                }
 
                 $appointment = new Appointment();
                 $appointment->appointment_date = $appt['appointment_date'];
