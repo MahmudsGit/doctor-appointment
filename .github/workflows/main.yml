@@ -19,5 +19,5 @@ jobs:
         run: php artisan key:generate
       - name: Generate storage link
         run: php artisan storage:link
-      - name: 📂 Sync files
-        uses: doctor-appointment
+      - name: Debug FTP-Deploy-Action
+        run: echo "Debugging FTP-Deploy-Action"
